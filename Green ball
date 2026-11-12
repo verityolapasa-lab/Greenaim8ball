@@ -1,0 +1,47 @@
+
+-- GREEN AIM 8 BALL
+-- Rebound System V2
+-- For your own Roblox Studio project
+
+local Rebounds = {}
+
+-- Calculate reflection against a surface normal
+function Rebounds.Reflect(direction, normal)
+    if direction.Magnitude == 0 or normal.Magnitude == 0 then
+        return Vector3.zero
+    end
+
+    local d = direction.Unit
+    local n = normal.Unit
+
+    return (d - 2 * d:Dot(n) * n).Unit
+end
+
+-- Calculate a rebound from a rectangular table edge
+function Rebounds.BounceAtEdge(position, direction, minX, maxX, minZ, maxZ)
+    local x = position.X
+    local z = position.Z
+
+    local dx = direction.X
+    local dz = direction.Z
+
+    if x <= minX and dx < 0 then
+        return Rebounds.Reflect(direction, Vector3.new(1, 0, 0))
+    end
+
+    if x >= maxX and dx > 0 then
+        return Rebounds.Reflect(direction, Vector3.new(-1, 0, 0))
+    end
+
+    if z <= minZ and dz < 0 then
+        return Rebounds.Reflect(direction, Vector3.new(0, 0, 1))
+    end
+
+    if z >= maxZ and dz > 0 then
+        return Rebounds.Reflect(direction, Vector3.new(0, 0, -1))
+    end
+
+    return direction.Unit
+end
+
+return Rebounds
